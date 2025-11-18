@@ -29,6 +29,7 @@ const Index = () => {
     phone: '',
     email: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
@@ -250,7 +251,7 @@ const Index = () => {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const isNameValid = validateName(formData.name);
@@ -275,26 +276,48 @@ const Index = () => {
       return;
     }
     
-    const subject = encodeURIComponent(`Заявка от ${formData.name}`);
-    const body = encodeURIComponent(
-      `ФИО: ${formData.name}\n` +
-      `Телефон: ${formData.phone}\n` +
-      `Email: ${formData.email}\n\n` +
-      `Вопрос:\n${formData.message}\n\n` +
-      `---\n` +
-      `Согласие на обработку персональных данных: Да\n` +
-      `Согласие на конфиденциальность: Да`
-    );
-    
-    window.location.href = `mailto:advokatmushovets@mail.ru?subject=${subject}&body=${body}`;
-    
-    toast({
-      title: 'Успешно',
-      description: 'Откроется ваш почтовый клиент для отправки заявки'
-    });
-    
-    setFormData({ name: '', phone: '', email: '', message: '' });
-    setConsents({ personalData: false, confidentiality: false });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
+          subject: `Новая заявка от ${formData.name}`,
+          from_name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          to_email: 'advokatmushovets@mail.ru'
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: 'Заявка отправлена!',
+          description: 'Я свяжусь с вами в ближайшее время'
+        });
+        
+        setFormData({ name: '', phone: '', email: '', message: '' });
+        setConsents({ personalData: false, confidentiality: false });
+      } else {
+        throw new Error(data.message || 'Ошибка отправки');
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка отправки',
+        description: 'Пожалуйста, попробуйте позже или свяжитесь по телефону',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -714,10 +737,10 @@ const Index = () => {
                     <Button 
                       type="submit" 
                       size="lg" 
-                      disabled={!consents.personalData || !consents.confidentiality}
+                      disabled={!consents.personalData || !consents.confidentiality || isSubmitting}
                       className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Отправить заявку
+                      {isSubmitting ? 'Отправка...' : 'Отправить заявку'}
                       <Icon name="Send" className="ml-2" size={20} />
                     </Button>
                     {(!consents.personalData || !consents.confidentiality) && (
