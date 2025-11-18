@@ -60,7 +60,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
     chat_id = os.environ.get('TELEGRAM_CHAT_ID')
     
-    print(f"Bot token present: {bool(bot_token)}, Chat ID present: {bool(chat_id)}")
+    print(f"Bot token present: {bool(bot_token)}, Chat ID: {chat_id}")
     
     if not bot_token or not chat_id:
         return {
@@ -84,7 +84,6 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     
-    # Ensure chat_id is string or int
     try:
         chat_id_value = int(chat_id) if chat_id.isdigit() else chat_id
     except:
