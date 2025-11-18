@@ -1,13 +1,14 @@
 import json
 import os
 import urllib.request
+import psycopg2
 from typing import Dict, Any
 
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Business: Send contact form to Telegram bot
-    Args: event with httpMethod, body containing form data
+    Business: CRM system - send form to Telegram and manage leads database
+    Args: event with httpMethod (GET for leads list, POST for new lead)
     Returns: HTTP response with success/error status
     """
     method: str = event.get('httpMethod', 'GET')
@@ -17,13 +18,79 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Max-Age': '86400'
             },
             'body': '',
             'isBase64Encoded': False
         }
+    
+    database_url = os.environ.get('DATABASE_URL')
+    
+    if method == 'GET':
+        if not database_url:
+            return {
+                'statusCode': 500,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': False, 'error': 'Database not configured'})
+            }
+        
+        try:
+            conn = psycopg2.connect(database_url)
+            cur = conn.cursor()
+            
+            cur.execute("""
+                SELECT id, name, phone, email, message, status, created_at, updated_at
+                FROM leads
+                ORDER BY created_at DESC
+            """)
+            
+            rows = cur.fetchall()
+            
+            leads = []
+            for row in rows:
+                leads.append({
+                    'id': row[0],
+                    'name': row[1],
+                    'phone': row[2],
+                    'email': row[3],
+                    'message': row[4],
+                    'status': row[5],
+                    'created_at': row[6].isoformat() if row[6] else None,
+                    'updated_at': row[7].isoformat() if row[7] else None
+                })
+            
+            cur.close()
+            conn.close()
+            
+            print(f"SUCCESS: Retrieved {len(leads)} leads from database")
+            
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': True, 'leads': leads, 'count': len(leads)})
+            }
+        
+        except Exception as e:
+            print(f"ERROR: Failed to fetch leads: {e}")
+            return {
+                'statusCode': 500,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': False, 'error': str(e)})
+            }
     
     if method != 'POST':
         return {
@@ -60,7 +127,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
     chat_id = os.environ.get('TELEGRAM_CHAT_ID')
     
-    print(f"Bot token present: {bool(bot_token)}, Chat ID: {chat_id}")
+    print(f"Bot token present: {bool(bot_token)}, Chat ID: {chat_id}, DB: {bool(database_url)}")
     
     if not bot_token or not chat_id:
         return {
@@ -73,6 +140,26 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'body': json.dumps({'success': False, 'error': 'Telegram credentials not configured'})
         }
     
+    lead_id = None
+    if database_url:
+        try:
+            conn = psycopg2.connect(database_url)
+            cur = conn.cursor()
+            
+            cur.execute(
+                "INSERT INTO leads (name, phone, email, message, status) VALUES (%s, %s, %s, %s, %s) RETURNING id",
+                (name, phone, email, message, 'new')
+            )
+            lead_id = cur.fetchone()[0]
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+            print(f"SUCCESS: Lead saved to database with ID={lead_id}")
+        except Exception as e:
+            print(f"WARNING: Failed to save to database: {e}")
+    
     telegram_message = f"""🆕 Новая заявка с сайта!
 
 👤 Имя: {name}
@@ -81,6 +168,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
 
 💬 Сообщение:
 {message}"""
+    
+    if lead_id:
+        telegram_message += f"\n\n🔢 ID заявки: #{lead_id}"
     
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     
@@ -115,7 +205,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                         'Content-Type': 'application/json'
                     },
                     'isBase64Encoded': False,
-                    'body': json.dumps({'success': True, 'message': 'Заявка отправлена'})
+                    'body': json.dumps({'success': True, 'message': 'Заявка отправлена', 'lead_id': lead_id})
                 }
             else:
                 print(f"ERROR: Telegram API returned not ok: {result}")

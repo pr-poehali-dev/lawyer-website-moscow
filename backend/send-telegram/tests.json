@@ -17,6 +17,16 @@
       "bodyMatcher": "partial"
     },
     {
+      "name": "Test GET leads",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    },
+    {
       "name": "Test OPTIONS for CORS",
       "method": "OPTIONS",
       "path": "/",
