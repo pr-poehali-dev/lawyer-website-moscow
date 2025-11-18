@@ -1,10 +1,51 @@
 /**
- * Business: Send contact form emails via SMTP (nodemailer)
+ * Business: Send contact form emails via SMTP and Telegram
  * Args: event with httpMethod, body containing form data
  * Returns: HTTP response with success/error status
  */
 
 import nodemailer from 'nodemailer';
+
+interface ContactFormData {
+    name: string;
+    email: string;
+    phone: string;
+    message: string;
+}
+
+async function sendToTelegram(formData: ContactFormData): Promise<void> {
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    
+    if (!botToken || !chatId) {
+        console.log('Telegram credentials not configured, skipping Telegram notification');
+        return;
+    }
+    
+    const message = `🆕 Новая заявка с сайта!\n\n👤 Имя: ${formData.name}\n📞 Телефон: ${formData.phone}\n📧 Email: ${formData.email}\n\n💬 Сообщение:\n${formData.message}`;
+    
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    const payload = JSON.stringify({
+        chat_id: chatId,
+        text: message
+    });
+    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: payload
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Telegram API error:', errorText);
+        throw new Error(`Telegram API returned ${response.status}`);
+    }
+    
+    console.log('Telegram notification sent successfully');
+}
 
 interface CloudFunctionEvent {
     httpMethod: string;
@@ -19,13 +60,6 @@ interface CloudFunctionContext {
     functionName: string;
     functionVersion: string;
     memoryLimitInMB: number;
-}
-
-interface ContactFormData {
-    name: string;
-    email: string;
-    phone: string;
-    message: string;
 }
 
 export const handler = async (event: CloudFunctionEvent, context: CloudFunctionContext): Promise<any> => {
@@ -112,6 +146,12 @@ export const handler = async (event: CloudFunctionEvent, context: CloudFunctionC
         };
 
         await transporter.sendMail(mailOptions);
+        
+        try {
+            await sendToTelegram(formData);
+        } catch (telegramError) {
+            console.error('Failed to send Telegram notification:', telegramError);
+        }
 
         return {
             statusCode: 200,
