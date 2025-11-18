@@ -36,6 +36,7 @@ const Index = () => {
     email: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [visibleSections, setVisibleSections] = useState<Set<string>>(
     new Set(),
@@ -236,6 +237,7 @@ const Index = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
       setActiveSection(sectionId);
+      setMobileMenuOpen(false);
     }
   };
 
@@ -371,12 +373,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-accent/20">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Icon name="Scale" className="text-accent" size={32} />
+              <Icon name="Scale" className="text-accent" size={28} />
               <div>
-                <h1 className="text-xl font-bold text-white">
+                <h1 className="text-lg sm:text-xl font-bold text-white">
                   Адвокатский кабинет
                 </h1>
                 <p className="text-xs text-accent">
@@ -384,6 +386,15 @@ const Index = () => {
                 </p>
               </div>
             </div>
+            
+            <button
+              className="md:hidden text-white hover:text-accent transition-colors p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Меню"
+            >
+              <Icon name={mobileMenuOpen ? "X" : "Menu"} size={24} />
+            </button>
+            
             <div className="hidden md:flex items-center gap-6">
               <button
                 onClick={() => scrollToSection("about")}
@@ -417,36 +428,71 @@ const Index = () => {
               </button>
             </div>
           </div>
+          
+          {mobileMenuOpen && (
+            <div className="md:hidden pb-2">
+              <div className="flex flex-col gap-2 pt-3">
+                <button
+                  onClick={() => scrollToSection("about")}
+                  className="text-white hover:text-accent transition-colors text-left px-2 py-2"
+                >
+                  О практике
+                </button>
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-white hover:text-accent transition-colors text-left px-2 py-2"
+                >
+                  Услуги
+                </button>
+                <button
+                  onClick={() => scrollToSection("faq")}
+                  className="text-white hover:text-accent transition-colors text-left px-2 py-2"
+                >
+                  Вопросы
+                </button>
+                <button
+                  onClick={() => scrollToSection("testimonials")}
+                  className="text-white hover:text-accent transition-colors text-left px-2 py-2"
+                >
+                  Отзывы
+                </button>
+                <button
+                  onClick={() => scrollToSection("contacts")}
+                  className="text-white hover:text-accent transition-colors text-left px-2 py-2"
+                >
+                  Контакты
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
       <section
         id="hero"
         ref={(el) => (sectionRefs.current["hero"] = el)}
-        className={`pt-32 pb-20 bg-gradient-to-b from-primary to-primary/90 transition-all duration-700 ${
+        className={`pt-28 sm:pt-32 pb-16 sm:pb-20 bg-gradient-to-b from-primary to-primary/90 transition-all duration-700 ${
           visibleSections.has("hero") ? "animate-fade-in" : "opacity-0"
         }`}
       >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-6">
-              <span className="inline-block px-4 py-2 bg-accent/20 text-accent text-sm font-semibold tracking-wider mb-4">
+              <span className="inline-block px-4 py-2 bg-accent/20 text-accent text-xs sm:text-sm font-semibold tracking-wider mb-4">
                 БОЛЕЕ 20 ЛЕТ ПРАКТИКИ
               </span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Профессиональная
-              <br />
-              защита ваших прав
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight px-2">
+              Профессиональная защита ваших прав
             </h1>
-            <p className="text-xl text-gray-300 mb-8">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 px-2">
               Член Адвокатской палаты города Москвы. Специализация по уголовным
               и арбитражным делам в судах всех уровней.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Button
                 size="lg"
-                className="bg-accent hover:bg-accent/90 text-primary font-semibold text-lg"
+                className="bg-accent hover:bg-accent/90 text-primary font-semibold text-base sm:text-lg w-full sm:w-auto active:scale-95 transition-transform"
                 onClick={() => scrollToSection("contacts")}
               >
                 Получить консультацию
@@ -455,7 +501,7 @@ const Index = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-accent text-accent hover:bg-accent hover:text-primary font-semibold"
+                className="border-accent text-accent hover:bg-accent hover:text-primary font-semibold w-full sm:w-auto active:scale-95 transition-transform"
                 onClick={() => scrollToSection("faq")}
               >
                 Ответы на вопросы
@@ -468,33 +514,33 @@ const Index = () => {
       <section
         id="stats"
         ref={(el) => (sectionRefs.current["stats"] = el)}
-        className="py-16 bg-white"
+        className="py-12 sm:py-16 bg-white"
       >
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent mb-2">
                 {stats.years}+
               </div>
-              <p className="text-muted-foreground">лет практики</p>
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground">лет практики</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent mb-2">
                 {stats.won}+
               </div>
-              <p className="text-muted-foreground">выигранных дел</p>
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground">выигранных дел</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent mb-2">
                 {stats.dismissed}+
               </div>
-              <p className="text-muted-foreground">прекращённых дел</p>
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground">прекращённых дел</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent mb-2">
                 {stats.confidentiality}%
               </div>
-              <p className="text-muted-foreground">конфиденциальность</p>
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground">конфиденциальность</p>
             </div>
           </div>
         </div>
@@ -503,21 +549,21 @@ const Index = () => {
       <section
         id="about"
         ref={(el) => (sectionRefs.current["about"] = el)}
-        className={`py-20 bg-muted transition-all duration-700 ${
+        className={`py-16 sm:py-20 bg-muted transition-all duration-700 ${
           visibleSections.has("about") ? "animate-fade-in-up" : "opacity-0"
         }`}
       >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12">
               О практике
             </h2>
             <div className="prose prose-lg max-w-none">
-              <p className="text-lg text-muted-foreground mb-6">
+              <p className="text-base sm:text-lg text-muted-foreground mb-6">
                 Юридическая практика более 20 лет гражданских, арбитражных и
                 уголовных дел в судах всех уровней.
               </p>
-              <p className="text-lg text-muted-foreground mb-6">
+              <p className="text-base sm:text-lg text-muted-foreground mb-6">
                 Успешная адвокатская практика специализации по уголовным делам,
                 позволила защитить нарушенные права доверителей как на стадии
                 предварительного расследования, так и в суде. Результатами
@@ -526,13 +572,13 @@ const Index = () => {
                 переквалификация преступлений, а также существенное снижение
                 наказания.
               </p>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="text-base sm:text-lg text-muted-foreground mb-8">
                 Успешная многолетняя практика в области ведения гражданских и
                 арбитражных дел позволила сохранить и приумножить имущество
                 доверителей физических и юридических лиц, а также реально
                 взыскать задолженности на сотни миллионов рублей.
               </p>
-              <blockquote className="border-l-4 border-accent pl-6 italic text-xl text-foreground">
+              <blockquote className="border-l-4 border-accent pl-4 sm:pl-6 italic text-lg sm:text-xl text-foreground">
                 "Мы найдем самый оптимальный путь разрешения любых, даже самых
                 сложных и запутанных жизненных ситуаций."
               </blockquote>
@@ -544,38 +590,38 @@ const Index = () => {
       <section
         id="services"
         ref={(el) => (sectionRefs.current["services"] = el)}
-        className={`py-20 transition-all duration-700 ${
+        className={`py-16 sm:py-20 transition-all duration-700 ${
           visibleSections.has("services") ? "animate-fade-in-up" : "opacity-0"
         }`}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4">
             Направления практики
           </h2>
-          <p className="text-center text-muted-foreground text-lg mb-12">
+          <p className="text-center text-muted-foreground text-sm sm:text-base md:text-lg mb-8 sm:mb-12 px-4">
             Профессиональная защита в Москве, Московской области и по всем
             регионам России
           </p>
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
             {services.map((service, index) => (
               <Card
                 key={index}
                 className="border-2 hover:border-accent transition-all duration-300 hover:shadow-xl"
               >
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <CardContent className="p-4 sm:p-6 md:p-8">
+                  <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Icon
                         name={service.icon}
                         className="text-accent"
-                        size={28}
+                        size={24}
                       />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold mb-3">
+                      <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
                         {service.title}
                       </h3>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                         {service.description}
                       </p>
                     </div>
@@ -590,15 +636,15 @@ const Index = () => {
       <section
         id="faq"
         ref={(el) => (sectionRefs.current["faq"] = el)}
-        className={`py-20 bg-muted transition-all duration-700 ${
+        className={`py-16 sm:py-20 bg-muted transition-all duration-700 ${
           visibleSections.has("faq") ? "animate-fade-in-up" : "opacity-0"
         }`}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4">
             Вопросы и ответы
           </h2>
-          <p className="text-center text-muted-foreground text-lg mb-12">
+          <p className="text-center text-muted-foreground text-sm sm:text-base md:text-lg mb-8 sm:mb-12 px-4">
             Ответы адвоката на типовые вопросы клиентов
           </p>
           <div className="max-w-4xl mx-auto">
@@ -607,24 +653,24 @@ const Index = () => {
                 <AccordionItem
                   key={index}
                   value={`item-${index}`}
-                  className="bg-white border-2 border-border rounded-lg px-6 data-[state=open]:border-accent"
+                  className="bg-white border-2 border-border rounded-lg px-4 sm:px-6 data-[state=open]:border-accent"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline py-6">
-                    <div className="flex items-start gap-4 pr-4">
-                      <span className="text-accent font-bold text-xl flex-shrink-0">
+                  <AccordionTrigger className="text-left hover:no-underline py-4 sm:py-6">
+                    <div className="flex items-start gap-3 sm:gap-4 pr-4">
+                      <span className="text-accent font-bold text-lg sm:text-xl flex-shrink-0">
                         Q{index + 1}
                       </span>
-                      <span className="font-semibold text-lg">
+                      <span className="font-semibold text-base sm:text-lg">
                         {faq.question}
                       </span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pt-2 pb-6">
-                    <div className="flex items-start gap-4">
-                      <span className="text-primary font-bold text-xl flex-shrink-0">
+                  <AccordionContent className="pt-2 pb-4 sm:pb-6">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <span className="text-primary font-bold text-lg sm:text-xl flex-shrink-0">
                         A
                       </span>
-                      <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                      <div className="text-sm sm:text-base text-muted-foreground leading-relaxed whitespace-pre-line">
                         {faq.answer}
                       </div>
                     </div>
@@ -639,21 +685,21 @@ const Index = () => {
       <section
         id="testimonials"
         ref={(el) => (sectionRefs.current["testimonials"] = el)}
-        className={`py-20 bg-white transition-all duration-700 ${
+        className={`py-16 sm:py-20 bg-white transition-all duration-700 ${
           visibleSections.has("testimonials")
             ? "animate-fade-in-up"
             : "opacity-0"
         }`}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4">
             Отзывы клиентов
           </h2>
-          <p className="text-center text-muted-foreground text-lg mb-12">
+          <p className="text-center text-muted-foreground text-sm sm:text-base md:text-lg mb-8 sm:mb-12 px-4">
             Реальные отзывы людей, которым я помог
           </p>
           <div className="max-w-5xl mx-auto relative">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden px-0 sm:px-4">
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
@@ -661,20 +707,20 @@ const Index = () => {
                 }}
               >
                 {testimonials.map((testimonial, index) => (
-                  <div key={index} className="w-full flex-shrink-0 px-4">
+                  <div key={index} className="w-full flex-shrink-0 px-2 sm:px-4">
                     <Card className="border-2 border-accent/30">
-                      <CardContent className="p-8">
-                        <div className="flex items-center gap-3 mb-6">
+                      <CardContent className="p-4 sm:p-6 md:p-8">
+                        <div className="flex items-center gap-3 mb-4 sm:mb-6">
                           <Icon
                             name="Quote"
                             className="text-accent"
-                            size={32}
+                            size={28}
                           />
-                          <h3 className="font-bold text-2xl">
+                          <h3 className="font-bold text-xl sm:text-2xl">
                             {testimonial.name}
                           </h3>
                         </div>
-                        <p className="text-muted-foreground leading-relaxed text-base">
+                        <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
                           {testimonial.text}
                         </p>
                       </CardContent>
@@ -683,14 +729,14 @@ const Index = () => {
                 ))}
               </div>
             </div>
-            <div className="flex justify-center gap-2 mt-8">
+            <div className="flex justify-center gap-2 mt-6 sm:mt-8">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
+                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${
                     index === currentTestimonial
-                      ? "bg-accent w-8"
+                      ? "bg-accent w-6 sm:w-8"
                       : "bg-accent/30"
                   }`}
                   aria-label={`Перейти к отзыву ${index + 1}`}
@@ -704,10 +750,10 @@ const Index = () => {
                     (prev - 1 + testimonials.length) % testimonials.length,
                 )
               }
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 bg-accent rounded-full flex items-center justify-center hover:bg-accent/90 transition-all shadow-lg"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 sm:-translate-x-4 w-10 h-10 sm:w-12 sm:h-12 bg-accent rounded-full flex items-center justify-center hover:bg-accent/90 transition-all shadow-lg z-10 active:scale-95"
               aria-label="Предыдущий отзыв"
             >
-              <Icon name="ChevronLeft" className="text-primary" size={24} />
+              <Icon name="ChevronLeft" className="text-primary" size={20} />
             </button>
             <button
               onClick={() =>
@@ -715,10 +761,10 @@ const Index = () => {
                   (prev) => (prev + 1) % testimonials.length,
                 )
               }
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 bg-accent rounded-full flex items-center justify-center hover:bg-accent/90 transition-all shadow-lg"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 sm:translate-x-4 w-10 h-10 sm:w-12 sm:h-12 bg-accent rounded-full flex items-center justify-center hover:bg-accent/90 transition-all shadow-lg z-10 active:scale-95"
               aria-label="Следующий отзыв"
             >
-              <Icon name="ChevronRight" className="text-primary" size={24} />
+              <Icon name="ChevronRight" className="text-primary" size={20} />
             </button>
           </div>
         </div>
@@ -727,82 +773,82 @@ const Index = () => {
       <section
         id="contacts"
         ref={(el) => (sectionRefs.current["contacts"] = el)}
-        className={`py-20 bg-gradient-to-b from-primary to-primary/90 transition-all duration-700 ${
+        className={`py-16 sm:py-20 bg-gradient-to-b from-primary to-primary/90 transition-all duration-700 ${
           visibleSections.has("contacts") ? "animate-fade-in-up" : "opacity-0"
         }`}
       >
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               Контакты
             </h2>
-            <p className="text-xl text-gray-300 mb-12">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-12 px-4">
               Свяжитесь со мной для получения профессиональной юридической
               помощи
             </p>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
               <Card className="bg-white/10 backdrop-blur-sm border-accent/20">
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Icon name="Phone" className="text-primary" size={32} />
+                <CardContent className="p-6 sm:p-8 text-center">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Icon name="Phone" className="text-primary" size={28} />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Телефон</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">Телефон</h3>
                   <a
                     href="tel:+79059768280"
-                    className="text-accent text-xl hover:text-accent/80 transition-colors"
+                    className="text-accent text-lg sm:text-xl hover:text-accent/80 transition-colors break-all"
                   >
                     +7 905-976-82-80
                   </a>
                 </CardContent>
               </Card>
               <Card className="bg-white/10 backdrop-blur-sm border-accent/20">
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Icon name="Mail" className="text-primary" size={32} />
+                <CardContent className="p-6 sm:p-8 text-center">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Icon name="Mail" className="text-primary" size={28} />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Email</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">Email</h3>
                   <a
                     href="mailto:advokatmushovets@mail.ru"
-                    className="text-accent text-xl hover:text-accent/80 transition-colors break-all"
+                    className="text-accent text-base sm:text-xl hover:text-accent/80 transition-colors break-all"
                   >
                     advokatmushovets@mail.ru
                   </a>
                 </CardContent>
               </Card>
             </div>
-            <div className="mt-12 mb-12">
+            <div className="mt-8 sm:mt-12 mb-8 sm:mb-12">
               <Card className="bg-white/10 backdrop-blur-sm border-accent/20">
-                <CardContent className="p-8">
+                <CardContent className="p-6 sm:p-8">
                   <Icon
                     name="MapPin"
                     className="text-accent mx-auto mb-4"
                     size={32}
                   />
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
                     Адвокат в Москве
                   </h3>
-                  <p className="text-gray-300">
+                  <p className="text-sm sm:text-base text-gray-300">
                     Член Адвокатской палаты города Москвы
                   </p>
-                  <p className="text-white font-semibold mt-4">
+                  <p className="text-sm sm:text-base text-white font-semibold mt-4">
                     Мушовец Алексей Геннадьевич
                   </p>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="mt-12">
+            <div className="mt-8 sm:mt-12">
               <Card className="bg-white border-2 border-accent/30">
-                <CardContent className="p-8">
-                  <h3 className="text-3xl font-bold text-center mb-2">
+                <CardContent className="p-4 sm:p-6 md:p-8">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-center mb-2">
                     Связаться со мной
                   </h3>
-                  <p className="text-center text-muted-foreground mb-8">
+                  <p className="text-center text-muted-foreground mb-6 sm:mb-8 text-sm sm:text-base">
                     Заполните форму и я свяжусь с вами в ближайшее время
                   </p>
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                     <div>
-                      <Label htmlFor="name" className="text-base font-semibold">
+                      <Label htmlFor="name" className="text-sm sm:text-base font-semibold">
                         ФИО *
                       </Label>
                       <Input
@@ -827,7 +873,7 @@ const Index = () => {
                     <div>
                       <Label
                         htmlFor="phone"
-                        className="text-base font-semibold"
+                        className="text-sm sm:text-base font-semibold"
                       >
                         Номер телефона *
                       </Label>
@@ -859,7 +905,7 @@ const Index = () => {
                     <div>
                       <Label
                         htmlFor="email"
-                        className="text-base font-semibold"
+                        className="text-sm sm:text-base font-semibold"
                       >
                         Email *
                       </Label>
@@ -886,7 +932,7 @@ const Index = () => {
                     <div>
                       <Label
                         htmlFor="message"
-                        className="text-base font-semibold"
+                        className="text-sm sm:text-base font-semibold"
                       >
                         Опишите ваш вопрос *
                       </Label>
@@ -902,7 +948,7 @@ const Index = () => {
                         className="mt-2"
                       />
                     </div>
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-3 sm:space-y-4 pt-4">
                       <div className="flex items-start gap-3">
                         <Checkbox
                           id="personalData"
@@ -917,7 +963,7 @@ const Index = () => {
                         />
                         <Label
                           htmlFor="personalData"
-                          className="text-sm leading-relaxed cursor-pointer"
+                          className="text-xs sm:text-sm leading-relaxed cursor-pointer"
                         >
                           Я согласен на обработку персональных данных в
                           соответствии с{" "}
@@ -944,7 +990,7 @@ const Index = () => {
                         />
                         <Label
                           htmlFor="confidentiality"
-                          className="text-sm leading-relaxed cursor-pointer"
+                          className="text-xs sm:text-sm leading-relaxed cursor-pointer"
                         >
                           Я подтверждаю, что вся предоставленная информация
                           конфиденциальна и защищена{" "}
@@ -966,13 +1012,13 @@ const Index = () => {
                         !consents.confidentiality ||
                         isSubmitting
                       }
-                      className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform"
                     >
                       {isSubmitting ? "Отправка..." : "Отправить заявку"}
                       <Icon name="Send" className="ml-2" size={20} />
                     </Button>
                     {(!consents.personalData || !consents.confidentiality) && (
-                      <p className="text-sm text-destructive text-center mt-2">
+                      <p className="text-xs sm:text-sm text-destructive text-center mt-2">
                         Для отправки заявки необходимо дать оба согласия
                       </p>
                     )}
@@ -984,30 +1030,30 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="bg-primary border-t border-accent/20 py-8">
+      <footer className="bg-primary border-t border-accent/20 py-6 sm:py-8">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-gray-400">
+          <p className="text-gray-400 text-sm sm:text-base">
             © {new Date().getFullYear()} Адвокатский кабинет Мушовец А.Г. Все
             права защищены.
           </p>
-          <p className="text-gray-500 text-sm mt-2">
+          <p className="text-gray-500 text-xs sm:text-sm mt-2">
             Профессиональное кредо: «Адвокат — нанятая совесть». Ф.М.
             Достоевский
           </p>
         </div>
       </footer>
 
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col gap-3">
         <a
           href="https://t.me/AdvokatMushovets"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-16 h-16 bg-[#0088cc] hover:bg-[#006699] rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110"
+          className="w-14 h-14 sm:w-16 sm:h-16 bg-[#0088cc] hover:bg-[#006699] rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95"
           aria-label="Написать в Telegram"
         >
           <svg
             viewBox="0 0 24 24"
-            className="w-8 h-8 text-white"
+            className="w-7 h-7 sm:w-8 sm:h-8 text-white"
             fill="currentColor"
           >
             <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
@@ -1018,12 +1064,12 @@ const Index = () => {
           href="https://wa.me/79059768280"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-16 h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110"
+          className="w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95"
           aria-label="Написать в WhatsApp"
         >
           <svg
             viewBox="0 0 24 24"
-            className="w-8 h-8 text-white"
+            className="w-7 h-7 sm:w-8 sm:h-8 text-white"
             fill="currentColor"
           >
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
