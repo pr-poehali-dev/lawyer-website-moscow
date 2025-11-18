@@ -36,14 +36,31 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'body': json.dumps({'error': 'Method not allowed'})
         }
     
-    body_data = json.loads(event.get('body', '{}'))
+    try:
+        body_data = json.loads(event.get('body', '{}'))
+    except Exception as e:
+        print(f"ERROR parsing body: {e}")
+        return {
+            'statusCode': 400,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'isBase64Encoded': False,
+            'body': json.dumps({'success': False, 'error': f'Invalid JSON: {str(e)}'})
+        }
+    
     name = body_data.get('name', 'Не указано')
     phone = body_data.get('phone', 'Не указан')
     email = body_data.get('email', 'Не указан')
     message = body_data.get('message', 'Нет сообщения')
     
+    print(f"Received form data: name={name}, phone={phone}, email={email}")
+    
     bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
     chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+    
+    print(f"Bot token present: {bool(bot_token)}, Chat ID present: {bool(chat_id)}")
     
     if not bot_token or not chat_id:
         return {
@@ -72,6 +89,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     }).encode('utf-8')
     
     try:
+        print(f"Sending to Telegram: {url}")
         req = urllib.request.Request(
             url,
             data=data,
@@ -80,8 +98,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         with urllib.request.urlopen(req) as response:
             result = json.loads(response.read().decode('utf-8'))
+            print(f"Telegram API response: {result}")
             
             if result.get('ok'):
+                print("SUCCESS: Message sent to Telegram")
                 return {
                     'statusCode': 200,
                     'headers': {
@@ -92,6 +112,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'body': json.dumps({'success': True, 'message': 'Заявка отправлена'})
                 }
             else:
+                print(f"ERROR: Telegram API returned not ok: {result}")
                 return {
                     'statusCode': 500,
                     'headers': {
@@ -103,6 +124,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 }
     
     except Exception as e:
+        print(f"EXCEPTION sending to Telegram: {type(e).__name__}: {str(e)}")
         return {
             'statusCode': 500,
             'headers': {
