@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
@@ -22,6 +23,28 @@ const Index = () => {
     personalData: false,
     confidentiality: false
   });
+
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set(prev).add(entry.target.id));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    Object.values(sectionRefs.current).forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const services = [
     {
@@ -141,7 +164,13 @@ const Index = () => {
         </div>
       </nav>
 
-      <section id="hero" className="pt-32 pb-20 bg-gradient-to-b from-primary to-primary/90">
+      <section 
+        id="hero" 
+        ref={(el) => (sectionRefs.current['hero'] = el)}
+        className={`pt-32 pb-20 bg-gradient-to-b from-primary to-primary/90 transition-all duration-700 ${
+          visibleSections.has('hero') ? 'animate-fade-in' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-6">
@@ -177,7 +206,13 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="about" className="py-20 bg-muted">
+      <section 
+        id="about" 
+        ref={(el) => (sectionRefs.current['about'] = el)}
+        className={`py-20 bg-muted transition-all duration-700 ${
+          visibleSections.has('about') ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">О практике</h2>
@@ -199,7 +234,13 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="services" className="py-20">
+      <section 
+        id="services" 
+        ref={(el) => (sectionRefs.current['services'] = el)}
+        className={`py-20 transition-all duration-700 ${
+          visibleSections.has('services') ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Направления практики</h2>
           <p className="text-center text-muted-foreground text-lg mb-12">
@@ -225,7 +266,13 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="faq" className="py-20 bg-muted">
+      <section 
+        id="faq" 
+        ref={(el) => (sectionRefs.current['faq'] = el)}
+        className={`py-20 bg-muted transition-all duration-700 ${
+          visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Вопросы и ответы</h2>
           <p className="text-center text-muted-foreground text-lg mb-12">
@@ -260,7 +307,13 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="contacts" className="py-20 bg-gradient-to-b from-primary to-primary/90">
+      <section 
+        id="contacts" 
+        ref={(el) => (sectionRefs.current['contacts'] = el)}
+        className={`py-20 bg-gradient-to-b from-primary to-primary/90 transition-all duration-700 ${
+          visibleSections.has('contacts') ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Контакты</h2>
@@ -364,7 +417,10 @@ const Index = () => {
                           required
                         />
                         <Label htmlFor="personalData" className="text-sm leading-relaxed cursor-pointer">
-                          Я согласен на обработку персональных данных в соответствии с политикой конфиденциальности
+                          Я согласен на обработку персональных данных в соответствии с{' '}
+                          <Link to="/privacy" className="text-accent hover:underline" target="_blank">
+                            политикой конфиденциальности
+                          </Link>
                         </Label>
                       </div>
                       <div className="flex items-start gap-3">
@@ -375,7 +431,10 @@ const Index = () => {
                           required
                         />
                         <Label htmlFor="confidentiality" className="text-sm leading-relaxed cursor-pointer">
-                          Я подтверждаю, что вся предоставленная информация конфиденциальна и защищена адвокатской тайной
+                          Я подтверждаю, что вся предоставленная информация конфиденциальна и защищена{' '}
+                          <Link to="/confidentiality" className="text-accent hover:underline" target="_blank">
+                            адвокатской тайной
+                          </Link>
                         </Label>
                       </div>
                     </div>
