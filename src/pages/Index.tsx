@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
+import CookieBanner from '@/components/CookieBanner';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('hero');
@@ -201,6 +202,29 @@ const Index = () => {
               >
                 Ответы на вопросы
               </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="text-5xl font-bold text-accent mb-2">20+</div>
+              <p className="text-muted-foreground">лет практики</p>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-accent mb-2">500+</div>
+              <p className="text-muted-foreground">выигранных дел</p>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-accent mb-2">200+</div>
+              <p className="text-muted-foreground">прекращённых дел</p>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl font-bold text-accent mb-2">100%</div>
+              <p className="text-muted-foreground">конфиденциальность</p>
             </div>
           </div>
         </div>
@@ -441,11 +465,17 @@ const Index = () => {
                     <Button 
                       type="submit" 
                       size="lg" 
-                      className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold text-lg"
+                      disabled={!consents.personalData || !consents.confidentiality}
+                      className="w-full bg-accent hover:bg-accent/90 text-primary font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Отправить заявку
                       <Icon name="Send" className="ml-2" size={20} />
                     </Button>
+                    {(!consents.personalData || !consents.confidentiality) && (
+                      <p className="text-sm text-destructive text-center mt-2">
+                        Для отправки заявки необходимо дать оба согласия
+                      </p>
+                    )}
                   </form>
                 </CardContent>
               </Card>
@@ -498,6 +528,8 @@ const Index = () => {
           </svg>
         </a>
       </div>
+
+      <CookieBanner />
     </div>
   );
 };
