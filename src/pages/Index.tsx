@@ -327,38 +327,27 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("🚀 Отправка заявки на Web3Forms...");
-      
-      const payload = {
-        access_key: "re_UoWD5DEi_2gSmu7oAwWywNNKDhcwJzYdq",
-        subject: `Новая заявка от ${formData.name}`,
-        from_name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
-        to_email: "advokatmushovets@mail.ru",
-      };
-      
-      console.log("📦 Данные для отправки:", {
-        ...payload,
-        access_key: "re_UoWD5DEi_***" // Скрываем часть ключа в логах
-      });
+      console.log("🚀 Отправка заявки через Formspree...");
 
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("https://formspree.io/f/xanyjevn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          _subject: `Новая заявка от ${formData.name}`,
+          _replyto: formData.email,
+        }),
       });
 
       console.log("📡 Статус ответа:", response.status, response.statusText);
 
-      const data = await response.json();
-      console.log("📥 Ответ от сервера:", data);
-
-      if (data.success) {
+      if (response.ok) {
         console.log("✅ Заявка успешно отправлена!");
         toast({
           title: "Заявка отправлена!",
@@ -368,8 +357,9 @@ const Index = () => {
         setFormData({ name: "", phone: "", email: "", message: "" });
         setConsents({ personalData: false, confidentiality: false });
       } else {
-        console.error("❌ Ошибка от Web3Forms:", data.message);
-        throw new Error(data.message || "Ошибка отправки");
+        const errorData = await response.json();
+        console.error("❌ Ошибка от Formspree:", errorData);
+        throw new Error("Ошибка отправки");
       }
     } catch (error) {
       console.error("💥 Критическая ошибка при отправке:", error);
