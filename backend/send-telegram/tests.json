@@ -31,6 +31,20 @@
       "method": "OPTIONS",
       "path": "/",
       "expectedStatus": 200
+    },
+    {
+      "name": "Test PUT update status",
+      "method": "PUT",
+      "path": "/",
+      "body": {
+        "id": 1,
+        "status": "contacted"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
     }
   ]
 }

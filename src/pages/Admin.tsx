@@ -11,6 +11,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 interface Lead {
   id: number;
@@ -26,6 +34,7 @@ const Admin = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchLeads();
@@ -73,6 +82,49 @@ const Admin = () => {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const updateLeadStatus = async (leadId: number, newStatus: string) => {
+    try {
+      const response = await fetch(
+        "https://functions.poehali.dev/36e0ccde-a82b-4626-bfb7-e1d922dbd482",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: leadId,
+            status: newStatus,
+          }),
+        },
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        setLeads((prevLeads) =>
+          prevLeads.map((lead) =>
+            lead.id === leadId ? { ...lead, status: newStatus } : lead,
+          ),
+        );
+        if (selectedLead?.id === leadId) {
+          setSelectedLead({ ...selectedLead, status: newStatus });
+        }
+        toast({
+          title: "Статус обновлен",
+          description: "Статус заявки успешно изменен",
+        });
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось обновить статус заявки",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {
@@ -163,7 +215,33 @@ const Admin = () => {
                               {lead.email}
                             </a>
                           </TableCell>
-                          <TableCell>{getStatusBadge(lead.status)}</TableCell>
+                          <TableCell>
+                            <Select
+                              value={lead.status}
+                              onValueChange={(value) =>
+                                updateLeadStatus(lead.id, value)
+                              }
+                            >
+                              <SelectTrigger className="w-[140px]">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="new">🆕 Новая</SelectItem>
+                                <SelectItem value="contacted">
+                                  📞 Связались
+                                </SelectItem>
+                                <SelectItem value="in_progress">
+                                  ⚙️ В работе
+                                </SelectItem>
+                                <SelectItem value="completed">
+                                  ✅ Завершена
+                                </SelectItem>
+                                <SelectItem value="cancelled">
+                                  ❌ Отменена
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
                           <TableCell className="text-right">
                             <Button
                               variant="ghost"
@@ -231,6 +309,32 @@ const Admin = () => {
                     >
                       {selectedLead.email}
                     </a>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Статус заявки
+                    </p>
+                    <Select
+                      value={selectedLead.status}
+                      onValueChange={(value) =>
+                        updateLeadStatus(selectedLead.id, value)
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new">🆕 Новая</SelectItem>
+                        <SelectItem value="contacted">
+                          📞 Связались
+                        </SelectItem>
+                        <SelectItem value="in_progress">
+                          ⚙️ В работе
+                        </SelectItem>
+                        <SelectItem value="completed">✅ Завершена</SelectItem>
+                        <SelectItem value="cancelled">❌ Отменена</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div>

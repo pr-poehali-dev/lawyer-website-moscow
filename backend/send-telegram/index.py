@@ -8,7 +8,7 @@ from typing import Dict, Any
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
     Business: CRM system - send form to Telegram and manage leads database
-    Args: event with httpMethod (GET for leads list, POST for new lead)
+    Args: event with httpMethod (GET for leads list, POST for new lead, PUT for update status)
     Returns: HTTP response with success/error status
     """
     method: str = event.get('httpMethod', 'GET')
@@ -18,7 +18,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Max-Age': '86400'
             },
@@ -82,6 +82,82 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         except Exception as e:
             print(f"ERROR: Failed to fetch leads: {e}")
+            return {
+                'statusCode': 500,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': False, 'error': str(e)})
+            }
+    
+    if method == 'PUT':
+        if not database_url:
+            return {
+                'statusCode': 500,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': False, 'error': 'Database not configured'})
+            }
+        
+        try:
+            body_data = json.loads(event.get('body', '{}'))
+        except Exception as e:
+            return {
+                'statusCode': 400,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': False, 'error': f'Invalid JSON: {str(e)}'})
+            }
+        
+        lead_id = body_data.get('id')
+        new_status = body_data.get('status')
+        
+        if not lead_id or not new_status:
+            return {
+                'statusCode': 400,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': False, 'error': 'Missing id or status'})
+            }
+        
+        try:
+            conn = psycopg2.connect(database_url)
+            cur = conn.cursor()
+            
+            cur.execute(
+                "UPDATE leads SET status = %s, updated_at = CURRENT_TIMESTAMP WHERE id = %s",
+                (new_status, lead_id)
+            )
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+            print(f"SUCCESS: Updated lead {lead_id} status to {new_status}")
+            
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': True, 'message': 'Status updated'})
+            }
+        
+        except Exception as e:
+            print(f"ERROR: Failed to update status: {e}")
             return {
                 'statusCode': 500,
                 'headers': {
