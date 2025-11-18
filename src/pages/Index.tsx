@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import CookieBanner from "@/components/CookieBanner";
+import emailjs from "@emailjs/browser";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("hero");
@@ -327,42 +328,35 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("🚀 Отправка заявки через Formspree...");
+      console.log("🚀 Отправка заявки через EmailJS...");
 
-      const response = await fetch("https://formspree.io/f/xanyjevn", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-          _subject: `Новая заявка от ${formData.name}`,
-          _replyto: formData.email,
-        }),
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        to_email: "advokatmushovets@mail.ru",
+      };
+
+      console.log("📦 Данные для отправки:", templateParams);
+
+      await emailjs.send(
+        "service_lcxkkfn",
+        "template_h8yomqe",
+        templateParams,
+        "sOEjCiZ0EqVz8RQFX"
+      );
+
+      console.log("✅ Заявка успешно отправлена!");
+      toast({
+        title: "Заявка отправлена!",
+        description: "Я свяжусь с вами в ближайшее время",
       });
 
-      console.log("📡 Статус ответа:", response.status, response.statusText);
-
-      if (response.ok) {
-        console.log("✅ Заявка успешно отправлена!");
-        toast({
-          title: "Заявка отправлена!",
-          description: "Я свяжусь с вами в ближайшее время",
-        });
-
-        setFormData({ name: "", phone: "", email: "", message: "" });
-        setConsents({ personalData: false, confidentiality: false });
-      } else {
-        const errorData = await response.json();
-        console.error("❌ Ошибка от Formspree:", errorData);
-        throw new Error("Ошибка отправки");
-      }
+      setFormData({ name: "", phone: "", email: "", message: "" });
+      setConsents({ personalData: false, confidentiality: false });
     } catch (error) {
-      console.error("💥 Критическая ошибка при отправке:", error);
+      console.error("💥 Ошибка при отправке:", error);
       toast({
         title: "Ошибка отправки",
         description: "Пожалуйста, попробуйте позже или свяжитесь по телефону",
