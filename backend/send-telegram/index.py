@@ -83,13 +83,20 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
 {message}"""
     
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    
+    # Ensure chat_id is string or int
+    try:
+        chat_id_value = int(chat_id) if chat_id.isdigit() else chat_id
+    except:
+        chat_id_value = chat_id
+    
     data = json.dumps({
-        'chat_id': chat_id,
+        'chat_id': chat_id_value,
         'text': telegram_message
     }).encode('utf-8')
     
     try:
-        print(f"Sending to Telegram: {url}")
+        print(f"Sending to Telegram chat_id={chat_id_value}")
         req = urllib.request.Request(
             url,
             data=data,
@@ -122,6 +129,26 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'isBase64Encoded': False,
                     'body': json.dumps({'success': False, 'error': 'Telegram API error', 'details': result})
                 }
+    
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode('utf-8') if e.fp else ''
+        print(f"HTTPError sending to Telegram: {e.code} {e.reason}")
+        print(f"Error body: {error_body}")
+        try:
+            error_json = json.loads(error_body)
+            error_message = error_json.get('description', str(e))
+        except:
+            error_message = f"{e.code} {e.reason}"
+        
+        return {
+            'statusCode': 500,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'isBase64Encoded': False,
+            'body': json.dumps({'success': False, 'error': error_message})
+        }
     
     except Exception as e:
         print(f"EXCEPTION sending to Telegram: {type(e).__name__}: {str(e)}")
