@@ -93,45 +93,35 @@ const Index = () => {
 
       <section id="hero" className="pt-32 pb-20 bg-gradient-to-b from-primary to-primary/90">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="mb-6">
-                <span className="inline-block px-4 py-2 bg-accent/20 text-accent text-sm font-semibold tracking-wider mb-4">
-                  БОЛЕЕ 20 ЛЕТ ПРАКТИКИ
-                </span>
-              </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                Профессиональная<br />защита ваших прав
-              </h1>
-              <p className="text-xl text-gray-300 mb-8">
-                Член Адвокатской палаты города Москвы. Специализация по уголовным и арбитражным делам в судах всех уровней.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  className="bg-accent hover:bg-accent/90 text-primary font-semibold text-lg"
-                  onClick={() => scrollToSection('contacts')}
-                >
-                  Получить консультацию
-                  <Icon name="ArrowRight" className="ml-2" size={20} />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-accent text-accent hover:bg-accent hover:text-primary font-semibold"
-                  onClick={() => scrollToSection('faq')}
-                >
-                  Ответы на вопросы
-                </Button>
-              </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-6">
+              <span className="inline-block px-4 py-2 bg-accent/20 text-accent text-sm font-semibold tracking-wider mb-4">
+                БОЛЕЕ 20 ЛЕТ ПРАКТИКИ
+              </span>
             </div>
-            <div className="relative">
-              <div className="absolute -top-10 -right-10 w-64 h-64 bg-accent/10 rounded-full blur-3xl"></div>
-              <img 
-                src="https://cdn.poehali.dev/files/13e036c6-7ada-40a1-ba10-6e4660a658c7.png" 
-                alt="Адвокат Мушовец Алексей Геннадьевич"
-                className="relative z-10 w-full rounded-lg shadow-2xl"
-              />
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Профессиональная<br />защита ваших прав
+            </h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Член Адвокатской палаты города Москвы. Специализация по уголовным и арбитражным делам в судах всех уровней.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-accent hover:bg-accent/90 text-primary font-semibold text-lg"
+                onClick={() => scrollToSection('contacts')}
+              >
+                Получить консультацию
+                <Icon name="ArrowRight" className="ml-2" size={20} />
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-accent text-accent hover:bg-accent hover:text-primary font-semibold"
+                onClick={() => scrollToSection('faq')}
+              >
+                Ответы на вопросы
+              </Button>
             </div>
           </div>
         </div>
