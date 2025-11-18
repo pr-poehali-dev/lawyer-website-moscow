@@ -32,6 +32,9 @@ const Index = () => {
 
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [statsAnimated, setStatsAnimated] = useState(false);
+  const [stats, setStats] = useState({ years: 0, won: 0, dismissed: 0, confidentiality: 0 });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -39,6 +42,10 @@ const Index = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setVisibleSections((prev) => new Set(prev).add(entry.target.id));
+            if (entry.target.id === 'stats' && !statsAnimated) {
+              setStatsAnimated(true);
+              animateStats();
+            }
           }
         });
       },
@@ -50,6 +57,36 @@ const Index = () => {
     });
 
     return () => observer.disconnect();
+  }, [statsAnimated]);
+
+  const animateStats = () => {
+    const duration = 2000;
+    const steps = 60;
+    const interval = duration / steps;
+    const targets = { years: 20, won: 500, dismissed: 200, confidentiality: 100 };
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      const progress = step / steps;
+      setStats({
+        years: Math.floor(targets.years * progress),
+        won: Math.floor(targets.won * progress),
+        dismissed: Math.floor(targets.dismissed * progress),
+        confidentiality: Math.floor(targets.confidentiality * progress)
+      });
+      if (step >= steps) {
+        setStats(targets);
+        clearInterval(timer);
+      }
+    }, interval);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   const services = [
@@ -178,10 +215,25 @@ const Index = () => {
     return true;
   };
 
+  const formatPhoneInput = (value: string): string => {
+    let cleaned = value.replace(/\D/g, '');
+    if (!value.startsWith('+7')) {
+      if (cleaned.startsWith('7')) {
+        cleaned = cleaned.substring(1);
+      } else if (cleaned.startsWith('8')) {
+        cleaned = cleaned.substring(1);
+      }
+    }
+    if (cleaned.length > 10) {
+      cleaned = cleaned.substring(0, 10);
+    }
+    return '+7' + cleaned;
+  };
+
   const validatePhone = (phone: string): boolean => {
     const cleaned = phone.replace(/\D/g, '');
-    if (cleaned.length < 10 || cleaned.length > 11) {
-      setFormErrors(prev => ({ ...prev, phone: 'Введите корректный номер телефона (10-11 цифр)' }));
+    if (cleaned.length !== 11 || !cleaned.startsWith('7')) {
+      setFormErrors(prev => ({ ...prev, phone: 'Введите корректный номер телефона в формате +7XXXXXXXXXX' }));
       return false;
     }
     setFormErrors(prev => ({ ...prev, phone: '' }));
@@ -310,23 +362,27 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section 
+        id="stats"
+        ref={(el) => (sectionRefs.current['stats'] = el)}
+        className="py-16 bg-white"
+      >
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">20+</div>
+              <div className="text-5xl font-bold text-accent mb-2">{stats.years}+</div>
               <p className="text-muted-foreground">лет практики</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">500+</div>
+              <div className="text-5xl font-bold text-accent mb-2">{stats.won}+</div>
               <p className="text-muted-foreground">выигранных дел</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">200+</div>
+              <div className="text-5xl font-bold text-accent mb-2">{stats.dismissed}+</div>
               <p className="text-muted-foreground">прекращённых дел</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-accent mb-2">100%</div>
+              <div className="text-5xl font-bold text-accent mb-2">{stats.confidentiality}%</div>
               <p className="text-muted-foreground">конфиденциальность</p>
             </div>
           </div>
@@ -446,18 +502,53 @@ const Index = () => {
           <p className="text-center text-muted-foreground text-lg mb-12">
             Реальные отзывы людей, которым я помог
           </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="border-2 hover:border-accent transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Icon name="Quote" className="text-accent" size={24} />
-                    <h3 className="font-bold text-lg">{testimonial.name}</h3>
+          <div className="max-w-5xl mx-auto relative">
+            <div className="overflow-hidden">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+              >
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="w-full flex-shrink-0 px-4">
+                    <Card className="border-2 border-accent/30">
+                      <CardContent className="p-8">
+                        <div className="flex items-center gap-3 mb-6">
+                          <Icon name="Quote" className="text-accent" size={32} />
+                          <h3 className="font-bold text-2xl">{testimonial.name}</h3>
+                        </div>
+                        <p className="text-muted-foreground leading-relaxed text-base">{testimonial.text}</p>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <p className="text-muted-foreground leading-relaxed text-sm">{testimonial.text}</p>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-8">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    index === currentTestimonial ? 'bg-accent w-8' : 'bg-accent/30'
+                  }`}
+                  aria-label={`Перейти к отзыву ${index + 1}`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 bg-accent rounded-full flex items-center justify-center hover:bg-accent/90 transition-all shadow-lg"
+              aria-label="Предыдущий отзыв"
+            >
+              <Icon name="ChevronLeft" className="text-primary" size={24} />
+            </button>
+            <button
+              onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 bg-accent rounded-full flex items-center justify-center hover:bg-accent/90 transition-all shadow-lg"
+              aria-label="Следующий отзыв"
+            >
+              <Icon name="ChevronRight" className="text-primary" size={24} />
+            </button>
           </div>
         </div>
       </section>
@@ -541,8 +632,14 @@ const Index = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => {
-                          setFormData({...formData, phone: e.target.value});
-                          if (e.target.value.trim()) validatePhone(e.target.value);
+                          const formatted = formatPhoneInput(e.target.value);
+                          setFormData({...formData, phone: formatted});
+                          if (formatted.length > 2) validatePhone(formatted);
+                        }}
+                        onFocus={(e) => {
+                          if (!e.target.value) {
+                            setFormData({...formData, phone: '+7'});
+                          }
                         }}
                         onBlur={(e) => validatePhone(e.target.value)}
                         placeholder="+7 (900) 123-45-67"
