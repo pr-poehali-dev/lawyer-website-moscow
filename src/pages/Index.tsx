@@ -15,7 +15,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import CookieBanner from "@/components/CookieBanner";
-import emailjs from "@emailjs/browser";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("hero");
@@ -330,33 +329,35 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("🚀 Отправка заявки через EmailJS...");
+      console.log("🚀 Отправка заявки в Telegram...");
 
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
-        to_email: "advokatmushovets@mail.ru",
-      };
-
-      console.log("📦 Данные для отправки:", templateParams);
-
-      await emailjs.send(
-        "service_lcxkkfn",
-        "template_h8yomqe",
-        templateParams,
-        "sOEjCiZ0EqVz8RQFX"
-      );
-
-      console.log("✅ Заявка успешно отправлена!");
-      toast({
-        title: "Заявка отправлена!",
-        description: "Я свяжусь с вами в ближайшее время",
+      const response = await fetch('https://functions.poehali.dev/36e0ccde-a82b-4626-bfb7-e1d922dbd482', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        }),
       });
 
-      setFormData({ name: "", phone: "", email: "", message: "" });
-      setConsents({ personalData: false, confidentiality: false });
+      const result = await response.json();
+
+      if (result.success) {
+        console.log("✅ Заявка успешно отправлена!");
+        toast({
+          title: "Заявка отправлена!",
+          description: "Я свяжусь с вами в ближайшее время",
+        });
+
+        setFormData({ name: "", phone: "", email: "", message: "" });
+        setConsents({ personalData: false, confidentiality: false });
+      } else {
+        throw new Error(result.error || 'Ошибка отправки');
+      }
     } catch (error) {
       console.error("💥 Ошибка при отправке:", error);
       toast({

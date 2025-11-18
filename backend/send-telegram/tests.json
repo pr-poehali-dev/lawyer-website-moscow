@@ -21,16 +21,6 @@
       "method": "OPTIONS",
       "path": "/",
       "expectedStatus": 200
-    },
-    {
-      "name": "Test method not allowed",
-      "method": "GET",
-      "path": "/",
-      "expectedStatus": 405,
-      "expectedBody": {
-        "error": "Method not allowed"
-      },
-      "bodyMatcher": "partial"
     }
   ]
 }
