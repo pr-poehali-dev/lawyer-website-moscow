@@ -261,17 +261,34 @@ const Index = () => {
 
   const formatPhoneInput = (value: string): string => {
     let cleaned = value.replace(/\D/g, "");
-    if (!value.startsWith("+7")) {
-      if (cleaned.startsWith("7")) {
-        cleaned = cleaned.substring(1);
-      } else if (cleaned.startsWith("8")) {
-        cleaned = cleaned.substring(1);
-      }
+    
+    if (cleaned.startsWith("8")) {
+      cleaned = "7" + cleaned.substring(1);
     }
-    if (cleaned.length > 10) {
-      cleaned = cleaned.substring(0, 10);
+    
+    if (!cleaned.startsWith("7")) {
+      cleaned = "7" + cleaned;
     }
-    return "+7" + cleaned;
+    
+    if (cleaned.length > 11) {
+      cleaned = cleaned.substring(0, 11);
+    }
+    
+    let formatted = "+7";
+    if (cleaned.length > 1) {
+      formatted += " " + cleaned.substring(1, 4);
+    }
+    if (cleaned.length > 4) {
+      formatted += " " + cleaned.substring(4, 7);
+    }
+    if (cleaned.length > 7) {
+      formatted += "-" + cleaned.substring(7, 9);
+    }
+    if (cleaned.length > 9) {
+      formatted += "-" + cleaned.substring(9, 11);
+    }
+    
+    return formatted;
   };
 
   const validatePhone = (phone: string): boolean => {
@@ -885,15 +902,11 @@ const Index = () => {
                         onChange={(e) => {
                           const formatted = formatPhoneInput(e.target.value);
                           setFormData({ ...formData, phone: formatted });
-                          if (formatted.length > 2) validatePhone(formatted);
-                        }}
-                        onFocus={(e) => {
-                          if (!e.target.value) {
-                            setFormData({ ...formData, phone: "+7" });
-                          }
+                          const cleaned = formatted.replace(/\D/g, "");
+                          if (cleaned.length === 11) validatePhone(formatted);
                         }}
                         onBlur={(e) => validatePhone(e.target.value)}
-                        placeholder="+7 (900) 123-45-67"
+                        placeholder="+7 900 123-45-67"
                         required
                         className={`mt-2 ${formErrors.phone ? "border-destructive" : ""}`}
                       />
