@@ -736,7 +736,7 @@ const Index = () => {
       <footer className="bg-primary border-t border-accent/20 py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-gray-400">
-            © {new Date().getFullYear()} Адвокатский кабинет Мушовца А.Г. Все права защищены.
+            © {new Date().getFullYear()} Адвокатский кабинет Мушовец А.Г. Все права защищены.
           </p>
           <p className="text-gray-500 text-sm mt-2">
             Профессиональное кредо: «Адвокат — нанятая совесть». Ф.М. Достоевский
