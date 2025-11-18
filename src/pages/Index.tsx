@@ -327,26 +327,39 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
+      console.log("🚀 Отправка заявки на Web3Forms...");
+      
+      const payload = {
+        access_key: "re_UoWD5DEi_2gSmu7oAwWywNNKDhcwJzYdq",
+        subject: `Новая заявка от ${formData.name}`,
+        from_name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        to_email: "advokatmushovets@mail.ru",
+      };
+      
+      console.log("📦 Данные для отправки:", {
+        ...payload,
+        access_key: "re_UoWD5DEi_***" // Скрываем часть ключа в логах
+      });
+
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          access_key: "re_UoWD5DEi_2gSmu7oAwWywNNKDhcwJzYdq",
-          subject: `Новая заявка от ${formData.name}`,
-          from_name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-          to_email: "advokatmushovets@mail.ru",
-        }),
+        body: JSON.stringify(payload),
       });
 
+      console.log("📡 Статус ответа:", response.status, response.statusText);
+
       const data = await response.json();
+      console.log("📥 Ответ от сервера:", data);
 
       if (data.success) {
+        console.log("✅ Заявка успешно отправлена!");
         toast({
           title: "Заявка отправлена!",
           description: "Я свяжусь с вами в ближайшее время",
@@ -355,9 +368,11 @@ const Index = () => {
         setFormData({ name: "", phone: "", email: "", message: "" });
         setConsents({ personalData: false, confidentiality: false });
       } else {
+        console.error("❌ Ошибка от Web3Forms:", data.message);
         throw new Error(data.message || "Ошибка отправки");
       }
     } catch (error) {
+      console.error("💥 Критическая ошибка при отправке:", error);
       toast({
         title: "Ошибка отправки",
         description: "Пожалуйста, попробуйте позже или свяжитесь по телефону",
@@ -365,6 +380,7 @@ const Index = () => {
       });
     } finally {
       setIsSubmitting(false);
+      console.log("🏁 Отправка завершена");
     }
   };
 
