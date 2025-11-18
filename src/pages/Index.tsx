@@ -24,6 +24,11 @@ const Index = () => {
     personalData: false,
     confidentiality: false
   });
+  const [formErrors, setFormErrors] = useState({
+    name: '',
+    phone: '',
+    email: ''
+  });
 
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
@@ -70,6 +75,57 @@ const Index = () => {
     }
   ];
 
+  const testimonials = [
+    {
+      name: 'Алина',
+      text: 'Хочу выразить благодарность Алексею Геннадьевичу! Обратилась к нему по трудовому спору, так как бывший работодатель после увольнения не выплатил мне заработную плату. Я обращалась к многим юристам за консультацией, но все общение с ними сводилось чтоб "развести" на консультацию, а дельных советов или решения моего вопроса так от них и не услышала. Алексей Геннадьевич четко определил суть вопроса и путь решения. Написал в надзорные органы несколько жалоб, работодатель все выплатил, сам и без суда!!! Рекомендую этого адвоката как профессионала.'
+    },
+    {
+      name: 'Анна',
+      text: 'Обращалась к этому адвокату по вопросу защиты моего брата по уголовному делу. Брат обвинялся в грабеже, хищении мобильного телефона. Изначально на следствии брату был предоставлен государственный адвокат по назначению. Я уверена, что если бы этот адвокат остался в деле до конца, то брата бы точно посадили. Профессиональная работа Алексея Геннадьевича на стадии предварительного следствия, путем защиты брата на допросах и активном участии в очных ставках позволило переквалифицировать преступление в другую категорию тяжести на ч. 1 ст. 158 УК РФ. В дальнейшем в суде по ходатайству Алексея Геннадьевича дело было вовсе прекращено, и мы отделались только штрафом! Я очень благодарна что судьба свела меня именно с этим адвокатом. Теперь всем друзьям и знакомым советую его по любым вопросам.'
+    },
+    {
+      name: 'Валентина Андреевна',
+      text: 'Попала на консультацию к Алексею Геннадьевичу по рекомендации знакомого. Я врач высшей категории. Работала в государственном учреждении и являлась членом врачебной комиссии. Так случилось, что по причине чужой халатности на меня решили повесить материальные убытки которые понес пациент проходивший комиссию (судебные медицинские заключения, транспортные расходы, расходы на юристов), суммы были заоблачные. При этом я была ни в чем не виновата, так как решал в итоге председатель комиссии. Работодатель решил взыскать эти расходы с меня в судебном порядке. Итог, все дисциплинарные взыскания в отношении меня суд признал незаконными и полностью отказал в удовлетворении исковых требований с меня. Все расходы мои на адвоката повесили на работодателя, я очень довольна результатом. Спасибо за профессиональный подход.'
+    },
+    {
+      name: 'Наталья',
+      text: 'Мой несовершеннолетний сын был задержан, при нем были обнаружены наркотики. По рекомендации друга обратилась к адвокату Мушовец Алексею Геннадьевичу. Я очень ему благодарна за незамедлительную реакцию на эти события. Он успел прибыть в полицию до первого допроса сына, в котором должен был участвовать бесплатный адвокат, предоставленный полицией. Изначально следователь хотел вменить ему статью за сбыт, но после допроса следователь принял решение возбудить дело по ч. 1 ст. 228 УК. Правильная защита сына на допроса и очной ставке спасла ему судьбу. В итоге дело было прекращено в суде, отделались только штрафом, а сын поступил в институт и успешно учится. Спасибо огромное!'
+    },
+    {
+      name: 'Аноним',
+      text: 'Я могу сказать об этом адвокате, что он не из самых дешевых адвокатов, но за успех и профессиональный подход надо платить достойно. В результате грамотной работе в суде, удалось признать сделку купли-продажи квартиры в Москве недействительной. В итоге вернула свою квартиру обратно в собственность, а мошенники были привлечены к уголовной ответственности и получили по заслугам. Рекомендую обращаться.'
+    },
+    {
+      name: 'Мария',
+      text: 'Обвинялась в незаконной банковской деятельности (обнал), прокурор грозил посадить на 5 лет. Адвокат Алексей Геннадьевич выбрал единственно верный способ защиты на предварительном следствии и в суде. В итоге получила 2 года условно.'
+    },
+    {
+      name: 'Эгамберди',
+      text: 'Являюсь гражданином Киргизии. Обвинялся в совершении грабежа, был задержан и отправлен под стражу. Готовился, что посадят минимум на 3 года. Алексея Геннадьевича нанял для меня мой брат. После вступления в дело он ознакомился с уголовным делом и увидел в документах фальсификацию со стороны следственных органов. Я не знаю всех подробностей как у него получилось, но через два месяца после возбуждения уголовного дела и нахождении меня в СИЗО, уголовное дело было переквалифицировано кражу в категорию средней тяжести. В суде по ходатайству следователя дело было прекращено, дали судебный штраф 20 тр. Очень благодарен адвокату.'
+    },
+    {
+      name: 'Александр',
+      text: 'Очень грамотно проконсультировал и написал нужный документ. Обошли без дорогостоящих судов.'
+    },
+    {
+      name: 'Михаил',
+      text: 'Покупал готовый бизнес, необходимо было проверить и оценить все риски оформления прав. Порекомендовали Алексея Геннадьевича. В итоге отказался от покупки, так как были юридические проблемы и ограничения по недвижимости. Очень благодарен адвокату, можно сказать спас от разорения. В дальнейшем по итогам юридической проверки адвокатом Алексеем Геннадьевичем приобрел другое, без каких либо проблем. Рекомендую.'
+    },
+    {
+      name: 'Владимир',
+      text: 'Выражаем огромную благодарность Адвокату Мушовец Алексею Геннадьевичу, за участие в апелляции по гражданскому делу в Московском городском суде. Благодарим за проявленный профессионализм и учет всех наших пожеланий, правильно выбранной стратегии. Апелляционное решение было вынесено в нашу пользу! В первой инстанции другие юристы проиграли дело.'
+    },
+    {
+      name: 'Дмитрий Валентинович',
+      text: 'Кому необходима качественная защита как на предварительном следствии так и в суде рекомендую адвоката Мушовец Алексея. Если есть хоть какой либо шанс улучшить положение доверителя, он обязательно им воспользуется и выберет единственный верный способ защиты за вполне вменяемые деньги, проверено.'
+    },
+    {
+      name: 'Наталья Владимировна',
+      text: 'Обращалась по рекомендации знакомых по гражданскому делу, взыскивала долг по договору займа. Решение суда первой инстанции устояло в апелляционной инстанции. В последствии помог с успешным исполнением решения у приставов. Благодарю за профессиональный подход и не стандартное решение вопросов.'
+    }
+  ];
+
   const faqs = [
     {
       question: 'Моего брата обвиняют в совершении кражи по ч. 1 ст. 158 УК РФ. Подскажите, можно ли как-нибудь дело прекратить?',
@@ -109,8 +165,54 @@ const Index = () => {
     }
   };
 
+  const validateName = (name: string): boolean => {
+    if (name.trim().length < 2) {
+      setFormErrors(prev => ({ ...prev, name: 'ФИО должно содержать минимум 2 символа' }));
+      return false;
+    }
+    if (!/^[А-Яа-яЁёA-Za-z\s-]+$/.test(name)) {
+      setFormErrors(prev => ({ ...prev, name: 'ФИО должно содержать только буквы' }));
+      return false;
+    }
+    setFormErrors(prev => ({ ...prev, name: '' }));
+    return true;
+  };
+
+  const validatePhone = (phone: string): boolean => {
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length < 10 || cleaned.length > 11) {
+      setFormErrors(prev => ({ ...prev, phone: 'Введите корректный номер телефона (10-11 цифр)' }));
+      return false;
+    }
+    setFormErrors(prev => ({ ...prev, phone: '' }));
+    return true;
+  };
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setFormErrors(prev => ({ ...prev, email: 'Введите корректный email адрес' }));
+      return false;
+    }
+    setFormErrors(prev => ({ ...prev, email: '' }));
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const isNameValid = validateName(formData.name);
+    const isPhoneValid = validatePhone(formData.phone);
+    const isEmailValid = validateEmail(formData.email);
+
+    if (!isNameValid || !isPhoneValid || !isEmailValid) {
+      toast({
+        title: 'Ошибка валидации',
+        description: 'Пожалуйста, исправьте ошибки в форме',
+        variant: 'destructive'
+      });
+      return;
+    }
     
     if (!consents.personalData || !consents.confidentiality) {
       toast({
@@ -159,6 +261,7 @@ const Index = () => {
               <button onClick={() => scrollToSection('about')} className="text-white hover:text-accent transition-colors">О практике</button>
               <button onClick={() => scrollToSection('services')} className="text-white hover:text-accent transition-colors">Услуги</button>
               <button onClick={() => scrollToSection('faq')} className="text-white hover:text-accent transition-colors">Вопросы</button>
+              <button onClick={() => scrollToSection('testimonials')} className="text-white hover:text-accent transition-colors">Отзывы</button>
               <button onClick={() => scrollToSection('contacts')} className="text-white hover:text-accent transition-colors">Контакты</button>
             </div>
           </div>
@@ -332,6 +435,34 @@ const Index = () => {
       </section>
 
       <section 
+        id="testimonials" 
+        ref={(el) => (sectionRefs.current['testimonials'] = el)}
+        className={`py-20 bg-white transition-all duration-700 ${
+          visibleSections.has('testimonials') ? 'animate-fade-in-up' : 'opacity-0'
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Отзывы клиентов</h2>
+          <p className="text-center text-muted-foreground text-lg mb-12">
+            Реальные отзывы людей, которым я помог
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="border-2 hover:border-accent transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Icon name="Quote" className="text-accent" size={24} />
+                    <h3 className="font-bold text-lg">{testimonial.name}</h3>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed text-sm">{testimonial.text}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section 
         id="contacts" 
         ref={(el) => (sectionRefs.current['contacts'] = el)}
         className={`py-20 bg-gradient-to-b from-primary to-primary/90 transition-all duration-700 ${
@@ -390,11 +521,18 @@ const Index = () => {
                       <Input 
                         id="name"
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        onChange={(e) => {
+                          setFormData({...formData, name: e.target.value});
+                          if (e.target.value.trim()) validateName(e.target.value);
+                        }}
+                        onBlur={(e) => validateName(e.target.value)}
                         placeholder="Иванов Иван Иванович"
                         required
-                        className="mt-2"
+                        className={`mt-2 ${formErrors.name ? 'border-destructive' : ''}`}
                       />
+                      {formErrors.name && (
+                        <p className="text-sm text-destructive mt-1">{formErrors.name}</p>
+                      )}
                     </div>
                     <div>
                       <Label htmlFor="phone" className="text-base font-semibold">Номер телефона *</Label>
@@ -402,11 +540,18 @@ const Index = () => {
                         id="phone"
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={(e) => {
+                          setFormData({...formData, phone: e.target.value});
+                          if (e.target.value.trim()) validatePhone(e.target.value);
+                        }}
+                        onBlur={(e) => validatePhone(e.target.value)}
                         placeholder="+7 (900) 123-45-67"
                         required
-                        className="mt-2"
+                        className={`mt-2 ${formErrors.phone ? 'border-destructive' : ''}`}
                       />
+                      {formErrors.phone && (
+                        <p className="text-sm text-destructive mt-1">{formErrors.phone}</p>
+                      )}
                     </div>
                     <div>
                       <Label htmlFor="email" className="text-base font-semibold">Email *</Label>
@@ -414,11 +559,18 @@ const Index = () => {
                         id="email"
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        onChange={(e) => {
+                          setFormData({...formData, email: e.target.value});
+                          if (e.target.value.trim()) validateEmail(e.target.value);
+                        }}
+                        onBlur={(e) => validateEmail(e.target.value)}
                         placeholder="example@mail.ru"
                         required
-                        className="mt-2"
+                        className={`mt-2 ${formErrors.email ? 'border-destructive' : ''}`}
                       />
+                      {formErrors.email && (
+                        <p className="text-sm text-destructive mt-1">{formErrors.email}</p>
+                      )}
                     </div>
                     <div>
                       <Label htmlFor="message" className="text-base font-semibold">Опишите ваш вопрос *</Label>
