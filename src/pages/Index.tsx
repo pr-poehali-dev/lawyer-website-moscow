@@ -666,10 +666,10 @@ const Index = () => {
                         />
                         <div>
                           <a
-                            href="tel:+79104828852"
+                            href="tel:+79060194020"
                             className="font-semibold hover:text-accent transition-colors"
                           >
-                            +7 (910) 482-88-52
+                            +7 906 019-40-20
                           </a>
                         </div>
                       </div>
@@ -691,7 +691,7 @@ const Index = () => {
 
                       <div className="flex items-center gap-4 pt-2">
                         <a
-                          href="https://wa.me/79104828852"
+                          href="https://wa.me/79060194020"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
@@ -700,7 +700,7 @@ const Index = () => {
                           <span className="text-sm">WhatsApp</span>
                         </a>
                         <a
-                          href="https://t.me/+79104828852"
+                          href="https://t.me/+79060194020"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
