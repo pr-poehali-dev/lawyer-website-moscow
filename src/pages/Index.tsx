@@ -681,10 +681,10 @@ const Index = () => {
                         />
                         <div>
                           <a
-                            href="mailto:9104828852@mail.ru"
+                            href="mailto:advokatmushovets@mail.ru"
                             className="font-semibold hover:text-accent transition-colors break-all"
                           >
-                            9104828852@mail.ru
+                            advokatmushovets@mail.ru
                           </a>
                         </div>
                       </div>
