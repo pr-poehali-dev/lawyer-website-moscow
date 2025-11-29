@@ -348,49 +348,49 @@ const Index = () => {
       <section
         id="hero"
         ref={(el) => (sectionRefs.current.hero = el)}
-        className="pt-32 pb-20 px-4"
+        className="pt-24 md:pt-32 pb-12 md:pb-20 px-4"
       >
         <div className="container mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div
-              className={`space-y-6 transition-all duration-1000 ${
+              className={`space-y-4 md:space-y-6 transition-all duration-1000 order-2 lg:order-1 ${
                 visibleSections.has("hero")
                   ? "opacity-100 translate-x-0"
                   : "opacity-0 -translate-x-10"
               }`}
             >
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground uppercase tracking-wide">
+                <p className="text-xs md:text-sm text-muted-foreground uppercase tracking-wide">
                   Профессиональное кредо:
                 </p>
-                <p className="text-lg italic text-foreground/80">
+                <p className="text-sm md:text-lg italic text-foreground/80 leading-relaxed">
                   "Надо, чтобы за дверью каждого довольного, счастливого
                   человека стоял кто-нибудь с молоточком и постоянно
                   напоминал бы стуком, что есть несчастные..."
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs md:text-sm text-muted-foreground">
                   — Ф.М. Достоевский
                 </p>
               </div>
               
               <div className="space-y-2">
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
                   Адвокатский кабинет
                 </h1>
-                <h2 className="text-2xl md:text-3xl font-semibold text-accent">
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-accent">
                   Адвоката Мушовец Алексея Геннадьевича
                 </h2>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-xs md:text-sm">
                   Адвокатская палата города Москвы, номер в реестре адвокатов
                   города Москвы 77/14943
                 </p>
               </div>
 
-              <p className="text-xl text-muted-foreground">
+              <p className="text-base md:text-xl text-muted-foreground">
                 Более 20 лет практики в области юриспруденции
               </p>
 
-              <p className="text-lg">
+              <p className="text-sm md:text-lg leading-relaxed">
                 Квалифицированное представление и защита интересов доверителей
                 в судах общей юрисдикции по вопросам применения уголовного и
                 гражданского законодательства, а также в арбитражном суде.
@@ -399,25 +399,27 @@ const Index = () => {
               <Button
                 size="lg"
                 onClick={() => scrollToSection("contact")}
-                className="text-lg px-8"
+                className="text-base md:text-lg px-6 md:px-8 w-full sm:w-auto"
               >
                 Получить консультацию
-                <Icon name="ArrowRight" className="ml-2 h-5 w-5" />
+                <Icon name="ArrowRight" className="ml-2 h-4 md:h-5 w-4 md:w-5" />
               </Button>
             </div>
 
             <div
-              className={`transition-all duration-1000 delay-300 ${
+              className={`w-full transition-all duration-1000 delay-300 order-1 lg:order-2 ${
                 visibleSections.has("hero")
                   ? "opacity-100 translate-x-0"
                   : "opacity-0 translate-x-10"
               }`}
             >
-              <img
-                src="https://cdn.poehali.dev/files/2d0d8f0b-bcfa-4aaa-9fee-c96c0dc27cd9.jpg"
-                alt="Адвокат Мушовец Алексей Геннадьевич"
-                className="rounded-lg shadow-2xl w-full object-cover"
-              />
+              <div className="relative w-full max-w-md mx-auto lg:max-w-none">
+                <img
+                  src="https://cdn.poehali.dev/files/2d0d8f0b-bcfa-4aaa-9fee-c96c0dc27cd9.jpg"
+                  alt="Адвокат Мушовец Алексей Геннадьевич"
+                  className="rounded-lg shadow-2xl w-full h-auto object-cover aspect-[3/4] md:aspect-auto"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -426,18 +428,18 @@ const Index = () => {
       <section
         id="services"
         ref={(el) => (sectionRefs.current.services = el)}
-        className="py-20 px-4 bg-muted/30"
+        className="py-12 md:py-20 px-4 bg-muted/30"
       >
         <div className="container mx-auto">
           <div
-            className={`text-center mb-12 transition-all duration-1000 ${
+            className={`text-center mb-8 md:mb-12 transition-all duration-1000 ${
               visibleSections.has("services")
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-10"
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Услуги</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">Услуги</h2>
+            <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto px-4">
               Представление интересов доверителей и защита по уголовным делам
               подозреваемых, обвиняемых, свидетелей, а также по вопросам
               связанным с исполнением приговора
@@ -455,17 +457,17 @@ const Index = () => {
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-accent/10 rounded-lg flex-shrink-0">
+                <CardContent className="p-4 md:p-6">
+                  <div className="flex items-start gap-3 md:gap-4">
+                    <div className="p-2 md:p-3 bg-accent/10 rounded-lg flex-shrink-0">
                       <Icon
                         name={service.icon}
-                        className="h-6 w-6 text-accent"
+                        className="h-5 w-5 md:h-6 md:w-6 text-accent"
                       />
                     </div>
                     <div className="space-y-2 flex-1">
-                      <h3 className="text-xl font-semibold">{service.title}</h3>
-                      <p className="text-muted-foreground">
+                      <h3 className="text-lg md:text-xl font-semibold">{service.title}</h3>
+                      <p className="text-sm md:text-base text-muted-foreground">
                         {service.description}
                       </p>
                       <Accordion type="single" collapsible className="w-full">
@@ -497,7 +499,7 @@ const Index = () => {
       <section
         id="about"
         ref={(el) => (sectionRefs.current.about = el)}
-        className="py-20 px-4"
+        className="py-12 md:py-20 px-4"
       >
         <div className="container mx-auto max-w-4xl">
           <div
@@ -511,7 +513,7 @@ const Index = () => {
               Обо мне
             </h2>
             <Card>
-              <CardContent className="p-8 space-y-6">
+              <CardContent className="p-4 md:p-8 space-y-4 md:space-y-6">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-muted-foreground leading-relaxed">
                     С 2005 года я занимаюсь защитой прав и интересов граждан и
@@ -576,17 +578,17 @@ const Index = () => {
       <section
         id="testimonials"
         ref={(el) => (sectionRefs.current.testimonials = el)}
-        className="py-20 px-4 bg-muted/30"
+        className="py-12 md:py-20 px-4 bg-muted/30"
       >
         <div className="container mx-auto max-w-4xl">
           <div
-            className={`text-center mb-12 transition-all duration-1000 ${
+            className={`text-center mb-8 md:mb-12 transition-all duration-1000 ${
               visibleSections.has("testimonials")
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-10"
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
               Отзывы клиентов
             </h2>
             <p className="text-muted-foreground">
@@ -596,14 +598,14 @@ const Index = () => {
 
           <div className="relative">
             <Card className="overflow-hidden">
-              <CardContent className="p-8">
-                <div className="min-h-[200px] flex flex-col justify-between">
+              <CardContent className="p-4 md:p-8">
+                <div className="min-h-[200px] md:min-h-[250px] flex flex-col justify-between">
                   <div>
                     <Icon
                       name="Quote"
-                      className="h-8 w-8 text-accent mb-4 opacity-50"
+                      className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3 md:mb-4 opacity-50"
                     />
-                    <p className="text-lg leading-relaxed mb-6">
+                    <p className="text-sm md:text-lg leading-relaxed mb-4 md:mb-6">
                       {testimonials[currentTestimonial].text}
                     </p>
                   </div>
@@ -635,7 +637,7 @@ const Index = () => {
       <section
         id="contact"
         ref={(el) => (sectionRefs.current.contact = el)}
-        className="py-20 px-4"
+        className="py-12 md:py-20 px-4"
       >
         <div className="container mx-auto max-w-4xl">
           <div
@@ -645,13 +647,13 @@ const Index = () => {
                 : "opacity-0 translate-y-10"
             }`}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-8 text-center">
               Контакты
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
               <Card>
-                <CardContent className="p-6 space-y-6">
+                <CardContent className="p-4 md:p-6 space-y-4 md:space-y-6">
                   <div>
                     <h3 className="font-semibold mb-4 text-lg">
                       Контактная информация
@@ -721,8 +723,8 @@ const Index = () => {
               </Card>
 
               <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-semibold mb-4 text-lg">
+                <CardContent className="p-4 md:p-6">
+                  <h3 className="font-semibold mb-3 md:mb-4 text-base md:text-lg">
                     Отправить заявку
                   </h3>
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -836,14 +838,14 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="border-t py-8 px-4 bg-muted/30">
+      <footer className="border-t py-6 md:py-8 px-4 bg-muted/30">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
             <div className="flex items-center gap-2">
               <Icon name="Scale" className="h-5 w-5 text-accent" />
               <span className="font-semibold">Адвокат Мушовец А.Г.</span>
             </div>
-            <div className="flex gap-6 text-sm text-muted-foreground">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground text-center">
               <Link to="/privacy" className="hover:text-accent transition">
                 Политика конфиденциальности
               </Link>
