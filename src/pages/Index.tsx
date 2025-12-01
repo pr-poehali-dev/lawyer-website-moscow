@@ -277,7 +277,7 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["hero", "services", "about", "testimonials", "contact"];
+      const sections = ["hero", "services", "about", "contact"];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -306,7 +306,7 @@ const Index = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
               <Icon name="Scale" className="h-6 w-6 text-accent" />
-              <span className="font-semibold text-lg">Адвокат Мушовец А.Г.</span>
+              <span className="font-semibold text-lg">Адвокатский кабинет</span>
             </div>
 
             <button
@@ -325,7 +325,6 @@ const Index = () => {
                 { id: "hero", label: "Главная" },
                 { id: "services", label: "Услуги" },
                 { id: "about", label: "Обо мне" },
-                { id: "testimonials", label: "Отзывы" },
                 { id: "contact", label: "Контакты" },
               ].map((item) => (
                 <button
@@ -351,12 +350,12 @@ const Index = () => {
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
         <div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 z-0 bg-cover bg-top bg-no-repeat"
           style={{
             backgroundImage: 'url(https://cdn.poehali.dev/files/97319bbf-bcb6-4967-8ae8-0cc80ac8d0df.jpg)',
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
@@ -369,17 +368,14 @@ const Index = () => {
               }`}
             >
               <div className="space-y-3">
-                <p className="text-sm md:text-base text-white/80 uppercase tracking-wider font-medium">
-                  Профессиональное кредо:
-                </p>
-                <p className="text-base md:text-xl italic text-white/90 leading-relaxed border-l-4 border-accent pl-4">
-                  "Надо, чтобы за дверью каждого довольного, счастливого
-                  человека стоял кто-нибудь с молоточком и постоянно
-                  напоминал бы стуком, что есть несчастные..."
-                </p>
-                <p className="text-sm md:text-base text-white/70 pl-4">
-                  — Ф.М. Достоевский
-                </p>
+                <div className="inline-block">
+                  <p className="text-2xl md:text-4xl font-bold text-white leading-tight">
+                    Защищаю права.
+                  </p>
+                  <p className="text-2xl md:text-4xl font-bold text-accent leading-tight">
+                    Отстаиваю справедливость.
+                  </p>
+                </div>
               </div>
               
               <div className="space-y-3 pt-4">
@@ -447,7 +443,7 @@ const Index = () => {
       <section
         id="services"
         ref={(el) => (sectionRefs.current.services = el)}
-        className="py-12 md:py-20 px-4 bg-muted/30"
+        className="py-12 md:py-20 px-4 bg-black/5"
       >
         <div className="container mx-auto">
           <div
@@ -550,31 +546,11 @@ const Index = () => {
                 <div className="grid sm:grid-cols-2 gap-6 pt-6 border-t">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-accent">
-                      <Icon name="Award" className="h-5 w-5" />
-                      <span className="font-semibold">Образование</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Высшее юридическое образование
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-accent">
                       <Icon name="Scale" className="h-5 w-5" />
                       <span className="font-semibold">Специализация</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Уголовное, гражданское и арбитражное право
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-accent">
-                      <Icon name="CheckCircle" className="h-5 w-5" />
-                      <span className="font-semibold">Статус</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Адвокат с 2005 года
                     </p>
                   </div>
 
@@ -594,64 +570,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section
-        id="testimonials"
-        ref={(el) => (sectionRefs.current.testimonials = el)}
-        className="py-12 md:py-20 px-4 bg-muted/30"
-      >
-        <div className="container mx-auto max-w-4xl">
-          <div
-            className={`text-center mb-8 md:mb-12 transition-all duration-1000 ${
-              visibleSections.has("testimonials")
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-10"
-            }`}
-          >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
-              Отзывы клиентов
-            </h2>
-            <p className="text-muted-foreground">
-              Доверие клиентов — лучшая оценка моей работы
-            </p>
-          </div>
 
-          <div className="relative">
-            <Card className="overflow-hidden">
-              <CardContent className="p-4 md:p-8">
-                <div className="min-h-[200px] md:min-h-[250px] flex flex-col justify-between">
-                  <div>
-                    <Icon
-                      name="Quote"
-                      className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3 md:mb-4 opacity-50"
-                    />
-                    <p className="text-sm md:text-lg leading-relaxed mb-4 md:mb-6">
-                      {testimonials[currentTestimonial].text}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p className="font-semibold">
-                      {testimonials[currentTestimonial].name}
-                    </p>
-                    <div className="flex gap-2">
-                      {testimonials.map((_, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentTestimonial(index)}
-                          className={`h-2 rounded-full transition-all ${
-                            index === currentTestimonial
-                              ? "w-8 bg-accent"
-                              : "w-2 bg-muted-foreground/30"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
 
       <section
         id="contact"
