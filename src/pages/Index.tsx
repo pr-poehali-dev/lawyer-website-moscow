@@ -348,80 +348,99 @@ const Index = () => {
       <section
         id="hero"
         ref={(el) => (sectionRefs.current.hero = el)}
-        className="pt-24 md:pt-32 pb-12 md:pb-20 px-4"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
-        <div className="container mx-auto">
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(https://cdn.poehali.dev/files/97319bbf-bcb6-4967-8ae8-0cc80ac8d0df.jpg)',
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/50"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl">
             <div
-              className={`space-y-4 md:space-y-6 transition-all duration-1000 order-2 lg:order-1 ${
+              className={`space-y-6 md:space-y-8 transition-all duration-1000 ${
                 visibleSections.has("hero")
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-10"
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
               }`}
             >
-              <div className="space-y-2">
-                <p className="text-xs md:text-sm text-muted-foreground uppercase tracking-wide">
+              <div className="space-y-3">
+                <p className="text-sm md:text-base text-white/80 uppercase tracking-wider font-medium">
                   Профессиональное кредо:
                 </p>
-                <p className="text-sm md:text-lg italic text-foreground/80 leading-relaxed">
+                <p className="text-base md:text-xl italic text-white/90 leading-relaxed border-l-4 border-accent pl-4">
                   "Надо, чтобы за дверью каждого довольного, счастливого
                   человека стоял кто-нибудь с молоточком и постоянно
                   напоминал бы стуком, что есть несчастные..."
                 </p>
-                <p className="text-xs md:text-sm text-muted-foreground">
+                <p className="text-sm md:text-base text-white/70 pl-4">
                   — Ф.М. Достоевский
                 </p>
               </div>
               
-              <div className="space-y-2">
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                  Адвокатский кабинет
+              <div className="space-y-3 pt-4">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
+                  Адвокат по уголовным делам
                 </h1>
-                <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-accent">
-                  Адвоката Мушовец Алексея Геннадьевича
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-accent">
+                  Мушовец Алексей Геннадьевич
                 </h2>
-                <p className="text-muted-foreground text-xs md:text-sm">
+                <p className="text-white/80 text-sm md:text-base">
                   Адвокатская палата города Москвы, номер в реестре адвокатов
                   города Москвы 77/14943
                 </p>
               </div>
 
-              <p className="text-base md:text-xl text-muted-foreground">
-                Более 20 лет практики в области юриспруденции
-              </p>
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center gap-3">
+                  <div className="h-1 w-12 bg-accent"></div>
+                  <p className="text-lg md:text-2xl text-white/90 font-medium">
+                    Более 20 лет практики в области юриспруденции
+                  </p>
+                </div>
 
-              <p className="text-sm md:text-lg leading-relaxed">
-                Квалифицированное представление и защита интересов доверителей
-                в судах общей юрисдикции по вопросам применения уголовного и
-                гражданского законодательства, а также в арбитражном суде.
-              </p>
+                <p className="text-base md:text-lg leading-relaxed text-white/85">
+                  Квалифицированное представление и защита интересов доверителей
+                  в судах общей юрисдикции по вопросам применения уголовного и
+                  гражданского законодательства, а также в арбитражном суде.
+                </p>
+              </div>
 
-              <Button
-                size="lg"
-                onClick={() => scrollToSection("contact")}
-                className="text-base md:text-lg px-6 md:px-8 w-full sm:w-auto"
-              >
-                Получить консультацию
-                <Icon name="ArrowRight" className="ml-2 h-4 md:h-5 w-4 md:w-5" />
-              </Button>
-            </div>
-
-            <div
-              className={`w-full transition-all duration-1000 delay-300 order-1 lg:order-2 ${
-                visibleSections.has("hero")
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 translate-x-10"
-              }`}
-            >
-              <div className="relative w-full max-w-md mx-auto lg:max-w-none">
-                <img
-                  src="https://cdn.poehali.dev/files/2d0d8f0b-bcfa-4aaa-9fee-c96c0dc27cd9.jpg"
-                  alt="Адвокат Мушовец Алексей Геннадьевич"
-                  className="rounded-lg shadow-2xl w-full h-auto object-cover aspect-[3/4] md:aspect-auto"
-                />
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Button
+                  size="lg"
+                  onClick={() => scrollToSection("contact")}
+                  className="text-base md:text-lg px-8 py-6 bg-accent hover:bg-accent/90 text-white font-semibold shadow-2xl hover:shadow-accent/50 transition-all duration-300 hover:scale-105"
+                >
+                  Получить консультацию
+                  <Icon name="ArrowRight" className="ml-2 h-5 w-5" />
+                </Button>
+                
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => scrollToSection("services")}
+                  className="text-base md:text-lg px-8 py-6 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur-sm font-semibold transition-all duration-300"
+                >
+                  Наши услуги
+                  <Icon name="ChevronDown" className="ml-2 h-5 w-5" />
+                </Button>
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+          <button
+            onClick={() => scrollToSection("services")}
+            className="text-white/60 hover:text-white transition-colors"
+          >
+            <Icon name="ChevronDown" className="h-8 w-8" />
+          </button>
         </div>
       </section>
 
