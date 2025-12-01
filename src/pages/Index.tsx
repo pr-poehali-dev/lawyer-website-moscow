@@ -301,17 +301,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="fixed top-0 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 border-b">
+      <nav className="fixed top-0 w-full bg-[#1a1a1a] backdrop-blur z-50 border-b border-white/10">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <Icon name="Scale" className="h-6 w-6 text-accent" />
-              <span className="font-semibold text-lg">Адвокатский кабинет</span>
+          <div className="flex justify-between items-center h-20">
+            <div className="flex flex-col">
+              <span className="font-semibold text-lg text-white">Адвокатский кабинет</span>
+              <span className="text-sm text-white/70">Адвоката Мушовец Алексей Геннадьевича</span>
             </div>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2"
+              className="md:hidden p-2 text-white"
             >
               <Icon name={mobileMenuOpen ? "X" : "Menu"} className="h-6 w-6" />
             </button>
@@ -319,7 +319,7 @@ const Index = () => {
             <div
               className={`${
                 mobileMenuOpen ? "flex" : "hidden"
-              } md:flex flex-col md:flex-row absolute md:relative top-16 md:top-0 left-0 right-0 bg-background md:bg-transparent border-b md:border-0 p-4 md:p-0 gap-2 md:gap-6`}
+              } md:flex flex-col md:flex-row absolute md:relative top-20 md:top-0 left-0 right-0 bg-[#1a1a1a] md:bg-transparent border-b border-white/10 md:border-0 p-4 md:p-0 gap-2 md:gap-8`}
             >
               {[
                 { id: "hero", label: "Главная" },
@@ -330,10 +330,10 @@ const Index = () => {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`transition-colors hover:text-accent text-left md:text-center ${
+                  className={`transition-colors text-left md:text-center ${
                     activeSection === item.id
                       ? "text-accent font-medium"
-                      : "text-muted-foreground"
+                      : "text-white/70 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -367,22 +367,11 @@ const Index = () => {
                   : "opacity-0 translate-y-10"
               }`}
             >
-              <div className="space-y-3">
-                <div className="inline-block">
-                  <p className="text-2xl md:text-4xl font-bold text-white leading-tight">
-                    Защищаю права.
-                  </p>
-                  <p className="text-2xl md:text-4xl font-bold text-accent leading-tight">
-                    Отстаиваю справедливость.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="space-y-3 pt-4">
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
-                  Адвокат по уголовным делам
+              <div className="space-y-4">
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight text-white">
+                  Защищаю права.
                 </h1>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-accent">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-accent">
                   Мушовец Алексей Геннадьевич
                 </h2>
                 <p className="text-white/80 text-sm md:text-base">
