@@ -358,7 +358,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-black/75"></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 relative z-10 pt-32">
           <div className="max-w-4xl">
             <div
               className={`space-y-6 md:space-y-8 transition-all duration-1000 ${
