@@ -368,30 +368,8 @@ const Index = () => {
               }`}
             >
               <div className="space-y-4">
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-white drop-shadow-2xl">
-                  Защищаю права.
-                </h1>
-                <h2 className="text-3xl md:text-5xl lg:text-6xl font-semibold text-accent drop-shadow-lg">
-                  Мушовец Алексей Геннадьевич
-                </h2>
-                <p className="text-white/80 text-sm md:text-base">
-                  Адвокатская палата города Москвы, номер в реестре адвокатов
-                  города Москвы 77/14943
-                </p>
-              </div>
-
-              <div className="space-y-4 pt-2">
-                <div className="flex items-center gap-3">
-                  <div className="h-1 w-12 bg-accent"></div>
-                  <p className="text-lg md:text-2xl text-white/90 font-medium">
-                    Более 20 лет практики в области юриспруденции
-                  </p>
-                </div>
-
-                <p className="text-base md:text-lg leading-relaxed text-white/85">
-                  Квалифицированное представление и защита интересов доверителей
-                  в судах общей юрисдикции по вопросам применения уголовного и
-                  гражданского законодательства, а также в арбитражном суде.
+                <p className="text-xl md:text-3xl text-white/90 font-medium drop-shadow-lg">
+                  Более 20 лет практики
                 </p>
               </div>
 
@@ -530,6 +508,9 @@ const Index = () => {
                     профессиональная защита должна быть доступна каждому, кто в
                     ней нуждается.
                   </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Адвоката Мушовец Алексея Геннадьевича, номер в реестре адвокатов города Москвы 77/14943
+                  </p>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6 pt-6 border-t">
@@ -641,9 +622,7 @@ const Index = () => {
 
                   <div className="pt-6 border-t">
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Я всегда готов помочь в решении любых юридических
-                      вопросов. Свяжитесь со мной для получения
-                      квалифицированной юридической помощи.
+                      Свяжитесь со мной
                     </p>
                   </div>
                 </CardContent>
