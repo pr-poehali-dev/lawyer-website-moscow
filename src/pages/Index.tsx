@@ -356,7 +356,7 @@ const Index = () => {
             backgroundImage: 'url(https://cdn.poehali.dev/files/97319bbf-bcb6-4967-8ae8-0cc80ac8d0df.jpg)',
           }}
         >
-          <div className="absolute inset-0 bg-black/75"></div>
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10 pt-32">
@@ -512,27 +512,7 @@ const Index = () => {
 
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-6 pt-6 border-t">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-accent">
-                      <Icon name="Scale" className="h-5 w-5" />
-                      <span className="font-semibold">Специализация</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Уголовное, гражданское и арбитражное право
-                    </p>
-                  </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-accent">
-                      <Icon name="MapPin" className="h-5 w-5" />
-                      <span className="font-semibold">География</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Москва и Московская область
-                    </p>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
