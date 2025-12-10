@@ -368,13 +368,13 @@ const Index = () => {
                   : "opacity-0 translate-y-10"
               }`}
             >
-              <div className="space-y-4 mt-32">
+              <div className="space-y-4 mt-48 md:mt-56">
                 <p className="text-xl md:text-3xl text-white/90 font-medium drop-shadow-lg">
                   Более 20 лет практики
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-6">
                 <Button
                   size="lg"
                   onClick={() => scrollToSection("contact")}
