@@ -306,7 +306,8 @@ const Index = () => {
           <div className="flex justify-between items-center h-20">
             <div className="flex flex-col">
               <span className="font-semibold text-lg text-white">Адвокатский кабинет</span>
-              <span className="text-sm text-white/70">Адвоката Мушовец Алексей Геннадьевича</span>
+              <span className="text-sm text-white/70">Адвоката Мушовец Алексея Геннадьевича</span>
+              <span className="text-xs text-white/60">номер в реестре адвокатов города Москвы 77/14943</span>
             </div>
 
             <button
@@ -367,7 +368,7 @@ const Index = () => {
                   : "opacity-0 translate-y-10"
               }`}
             >
-              <div className="space-y-4">
+              <div className="space-y-4 mt-32">
                 <p className="text-xl md:text-3xl text-white/90 font-medium drop-shadow-lg">
                   Более 20 лет практики
                 </p>
@@ -508,9 +509,7 @@ const Index = () => {
                     профессиональная защита должна быть доступна каждому, кто в
                     ней нуждается.
                   </p>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Адвоката Мушовец Алексея Геннадьевича, номер в реестре адвокатов города Москвы 77/14943
-                  </p>
+
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6 pt-6 border-t">
