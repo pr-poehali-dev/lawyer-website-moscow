@@ -227,6 +227,7 @@ const Index = () => {
     setIsSubmitting(true);
 
     try {
+      console.log('Sending form data:', formData);
       const response = await fetch(
         "https://functions.poehali.dev/36e0ccde-a82b-4626-bfb7-e1d922dbd482",
         {
@@ -238,7 +239,10 @@ const Index = () => {
         },
       );
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
+      
       if (data.success) {
         toast({
           title: "Заявка отправлена!",
@@ -250,6 +254,7 @@ const Index = () => {
         throw new Error(data.error);
       }
     } catch (error) {
+      console.error('Form submission error:', error);
       toast({
         title: "Ошибка при отправке",
         description: "Попробуйте позже или свяжитесь по телефону",
